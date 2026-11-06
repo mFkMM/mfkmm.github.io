@@ -164,7 +164,7 @@ footer b { color: var(--gold); font-weight: 600; }
 <script>
 /* Hedef adres burada şifreli durur: sayfa kaynağında görünmez. Doğru şifre PBKDF2 ile anahtar üretir,
    AES-GCM ile adresi çözer ve oraya yönlendirir. Yanlış şifre çözemez. Paketi "sifre_olustur.html" üretir. */
-const PAYLOAD = null;   // örnek: {"s":"...","i":"...","c":"...","n":310000}
+const PAYLOAD = {"s": "IIOAhiqbDb0qLlR9yn7Ymw==", "i": "1krIGI5Oix+Y7L98", "c": "jOxB+25irAuhNqQFVm1YXa+pfFL/r8/q74OqF0N9Wx2Sxtwzqzg9ORRRhu1JjZDXilaA3ERwn6gubN6sniI1QGZ/yMP5uRIZiy8/004a6B5uwp96tgvaDR9GAzEfy54ISo02IaExA/1hTUAAcENooh2gOkd5mRE=", "n": 310000};   // örnek: {"s":"...","i":"...","c":"...","n":310000}
 
 const $ = id => document.getElementById(id);
 const b64 = s => Uint8Array.from(atob(s), ch => ch.charCodeAt(0));
