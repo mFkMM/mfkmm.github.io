@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#06080e">
+<title>mFk Market Maker</title>
+<link rel="icon" type="image/png" href="logo.png">
+<link rel="apple-touch-icon" href="logo.png">
+<style>
+:root {
+  --bg: #06080e;
+  --card: rgba(13, 18, 30, 0.72);
+  --border: rgba(255, 255, 255, 0.10);
+  --text: #f8fafc;
+  --muted: #94a3b8;
+  --dim: #64748b;
+  --green: #10b981;
+  --red: #f43f5e;
+  --gold: #fbbf24;
+  --font: "HarmonyOS Sans", Inter, "Segoe UI Variable", "Segoe UI", system-ui, -apple-system, Roboto, Arial, sans-serif;
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html, body { height: 100%; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font);
+  display: flex; align-items: center; justify-content: center;
+  min-height: 100svh; overflow: hidden;
+  padding: 24px 16px calc(24px + env(safe-area-inset-bottom));
+  -webkit-font-smoothing: antialiased;
+}
+#bg { position: fixed; inset: 0; width: 100%; height: 100%; z-index: 0; }
+.glow {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(520px 320px at 50% 30%, rgba(244, 63, 94, 0.13), transparent 70%),
+    radial-gradient(520px 320px at 50% 62%, rgba(16, 185, 129, 0.11), transparent 70%);
+}
+main {
+  position: relative; z-index: 1;
+  width: 100%; max-width: 400px;
+  display: flex; flex-direction: column; align-items: center;
+}
+.logo-frame {
+  padding: 3px; border-radius: 32px;
+  background: linear-gradient(180deg, var(--red) 0%, var(--red) 46%, var(--green) 54%, var(--green) 100%);
+  box-shadow: 0 -10px 40px rgba(244, 63, 94, 0.40), 0 10px 40px rgba(16, 185, 129, 0.40);
+  animation: breathe 5s ease-in-out infinite;
+}
+.logo-frame img {
+  display: block; width: 176px; height: 176px; border-radius: 29px; object-fit: cover;
+}
+@keyframes breathe {
+  0%, 100% { box-shadow: 0 -10px 40px rgba(244, 63, 94, 0.38), 0 10px 40px rgba(16, 185, 129, 0.38); }
+  50% { box-shadow: 0 -14px 56px rgba(244, 63, 94, 0.55), 0 14px 56px rgba(16, 185, 129, 0.55); }
+}
+h1 {
+  margin-top: 26px; font-size: 30px; font-weight: 800; letter-spacing: -0.02em;
+  display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; justify-content: center;
+}
+.t-mfk {
+  font-weight: 900;
+  background: linear-gradient(125deg, #ff3366 0%, var(--gold) 48%, #00f59b 100%);
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 10px rgba(251, 191, 36, 0.40));
+}
+.t-market {
+  background: linear-gradient(180deg, #fff 35%, #ff8095 100%);
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+}
+.t-maker {
+  background: linear-gradient(180deg, #fff 35%, #34d399 100%);
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+}
+form { width: 100%; margin-top: 30px; display: flex; flex-direction: column; gap: 14px; }
+.field {
+  display: flex; align-items: center; gap: 10px;
+  height: 58px; padding: 0 16px;
+  background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  transition: border-color .2s, box-shadow .2s;
+}
+.field:focus-within {
+  border-color: rgba(251, 191, 36, 0.55);
+  box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.10);
+}
+.field svg { flex-shrink: 0; color: var(--muted); }
+.field input {
+  flex: 1; min-width: 0; height: 100%;
+  background: transparent; border: 0; outline: 0;
+  color: var(--text); font: 500 16px var(--font); letter-spacing: .02em;
+}
+.field input::placeholder { color: var(--dim); }
+.eye { background: none; border: 0; cursor: pointer; color: var(--muted); display: flex; padding: 6px; }
+.eye:hover { color: var(--text); }
+button.go {
+  height: 58px; border-radius: 16px; border: 1px solid rgba(255, 255, 255, 0.14);
+  cursor: pointer; font: 700 17px var(--font); color: #fff; letter-spacing: .01em;
+  display: flex; align-items: center; justify-content: center; gap: 10px;
+  background: linear-gradient(90deg, rgba(244, 63, 94, 0.85), rgba(251, 191, 36, 0.80) 50%, rgba(16, 185, 129, 0.85));
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.45);
+  transition: transform .15s, filter .2s, opacity .2s;
+}
+button.go:hover { filter: brightness(1.08); }
+button.go:active { transform: scale(0.985); }
+button.go:disabled { opacity: .55; cursor: wait; }
+.msg { min-height: 20px; text-align: center; font-size: 14px; color: var(--red); }
+.msg.ok { color: var(--green); }
+.shake { animation: shake .35s; }
+@keyframes shake {
+  20%, 60% { transform: translateX(-7px); } 40%, 80% { transform: translateX(7px); }
+}
+footer {
+  position: fixed; left: 0; right: 0; bottom: calc(14px + env(safe-area-inset-bottom)); z-index: 1;
+  text-align: center; font-size: 12px; letter-spacing: .18em; color: var(--dim);
+}
+footer b { color: var(--gold); font-weight: 600; }
+@media (max-width: 420px) {
+  .logo-frame img { width: 140px; height: 140px; }
+  h1 { font-size: 25px; margin-top: 22px; }
+}
+@media (max-height: 640px) {
+  .logo-frame img { width: 110px; height: 110px; }
+  h1 { margin-top: 14px; font-size: 22px; }
+  form { margin-top: 18px; }
+}
+@media (prefers-reduced-motion: reduce) { .logo-frame { animation: none; } }
+</style>
+</head>
+<body>
+<canvas id="bg" aria-hidden="true"></canvas>
+<div class="glow" aria-hidden="true"></div>
+
+<main>
+  <div class="logo-frame"><img src="logo.png" alt="mFk Market Maker"></div>
+  <h1><span class="t-mfk">mFk</span><span class="t-market">Market</span><span class="t-maker">Maker</span></h1>
+
+  <form id="f" autocomplete="off">
+    <label class="field">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+           stroke-linecap="round" stroke-linejoin="round"><rect x="4" y="11" width="16" height="10" rx="2"/>
+        <path d="M8 11V7a4 4 0 0 1 8 0v4"/></svg>
+      <input id="pw" type="password" placeholder="Şifrenizi girin" aria-label="Şifre"
+             autocomplete="current-password" required>
+      <button type="button" class="eye" id="eye" aria-label="Şifreyi göster">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+             stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-7 11-7 11 7 11 7-4 7-11 7S1 12 1 12z"/>
+          <circle cx="12" cy="12" r="3"/></svg>
+      </button>
+    </label>
+    <button class="go" id="go" type="submit">Giriş Yap
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"
+           stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </button>
+    <div class="msg" id="msg" role="status" aria-live="polite"></div>
+  </form>
+</main>
+
+<footer><b>@MFK</b> • SECURE GATEWAY</footer>
+
+<script>
+/* Hedef adres burada şifreli durur: sayfa kaynağında görünmez. Doğru şifre PBKDF2 ile anahtar üretir,
+   AES-GCM ile adresi çözer ve oraya yönlendirir. Yanlış şifre çözemez. Paketi "sifre_olustur.html" üretir. */
+const PAYLOAD = null;   // örnek: {"s":"...","i":"...","c":"...","n":310000}
+
+const $ = id => document.getElementById(id);
+const b64 = s => Uint8Array.from(atob(s), ch => ch.charCodeAt(0));
+let fails = 0, lockUntil = 0;
+
+$('eye').addEventListener('click', () => {
+  const p = $('pw'); p.type = p.type === 'password' ? 'text' : 'password'; p.focus();
+});
+
+async function unlock(pw) {
+  const enc = new TextEncoder();
+  const base = await crypto.subtle.importKey('raw', enc.encode(pw), 'PBKDF2', false, ['deriveKey']);
+  const key = await crypto.subtle.deriveKey(
+    { name: 'PBKDF2', salt: b64(PAYLOAD.s), iterations: PAYLOAD.n, hash: 'SHA-256' },
+    base, { name: 'AES-GCM', length: 256 }, false, ['decrypt']);
+  const plain = await crypto.subtle.decrypt({ name: 'AES-GCM', iv: b64(PAYLOAD.i) }, key, b64(PAYLOAD.c));
+  return JSON.parse(new TextDecoder().decode(plain));
+}
+
+$('f').addEventListener('submit', async e => {
+  e.preventDefault();
+  const msg = $('msg'), btn = $('go');
+  msg.className = 'msg'; msg.textContent = '';
+  if (!PAYLOAD) { msg.textContent = 'Bağlantı henüz ayarlanmadı.'; return; }
+  const wait = Math.ceil((lockUntil - Date.now()) / 1000);
+  if (wait > 0) { msg.textContent = `Çok fazla deneme. ${wait} sn bekleyin.`; return; }
+  btn.disabled = true;
+  try {
+    const data = await unlock($('pw').value);
+    msg.className = 'msg ok'; msg.textContent = 'Güvenli bağlantı kuruluyor…';
+    location.replace(data.target);
+  } catch {
+    fails += 1;
+    if (fails >= 5) { lockUntil = Date.now() + 30000 * (fails - 4); }
+    msg.textContent = 'Şifre hatalı.';
+    const f = $('f'); f.classList.remove('shake'); void f.offsetWidth; f.classList.add('shake');
+    $('pw').select();
+  } finally {
+    btn.disabled = false;
+  }
+});
+
+/* Arka plan: uçuşan borsa simgeleri - coin işaretleri, mum çubukları, ▲▼ okları, % ve yükselen/düşen
+   mini grafikler. Yeşil = alış/yükseliş, kırmızı = satış/düşüş, altın = coin. Derinlik hissi için uzak
+   olanlar küçük, soluk ve yavaş. Arka sekmede ve "hareketi azalt" tercihinde durur (pil dostu). */
+(() => {
+  const c = $('bg'), ctx = c.getContext('2d');
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const G = '16,185,129', R = '244,63,94', Y = '251,191,36', S = '148,163,184';
+  const COINS = ['₿', 'Ξ', '$', '₮', '◎', 'Ł', '€'];
+  let W, H, DPR, items = [], last = performance.now();
+
+  function make(randomY) {
+    const z = Math.random() ** 1.6;                       // 0 = far, 1 = near
+    const kind = Math.random();
+    const it = {
+      z, x: Math.random() * W, y: randomY ? Math.random() * H : H + 40 * DPR,
+      vy: -(8 + 26 * z) * DPR, vx: (Math.random() - 0.5) * 6 * DPR,
+      rot: (Math.random() - 0.5) * 0.5, vr: (Math.random() - 0.5) * 0.25,
+      a: 0.10 + 0.40 * z, size: (10 + 22 * z) * DPR, phase: Math.random() * 6.28,
+    };
+    if (kind < 0.34) { it.type = 'coin'; it.ch = COINS[Math.floor(Math.random() * COINS.length)]; it.col = Y; }
+    else if (kind < 0.62) { it.type = 'candle'; it.up = Math.random() < 0.5; it.col = it.up ? G : R; }
+    else if (kind < 0.80) { it.type = 'arrow'; it.up = Math.random() < 0.5; it.col = it.up ? G : R; }
+    else if (kind < 0.90) { it.type = 'pct'; it.up = Math.random() < 0.5; it.col = it.up ? G : R;
+      it.txt = (it.up ? '+' : '−') + (Math.random() * 9 + 0.1).toFixed(1) + '%'; }
+    else { it.type = 'spark'; it.up = Math.random() < 0.5; it.col = it.up ? G : R;
+      it.pts = Array.from({ length: 7 }, (_, i) => (it.up ? i : 6 - i) * 0.12 + (Math.random() - 0.5) * 0.35); }
+    return it;
+  }
+
+  function size() {
+    DPR = Math.min(devicePixelRatio || 1, 2);
+    W = c.width = innerWidth * DPR; H = c.height = innerHeight * DPR;
+    c.style.width = innerWidth + 'px'; c.style.height = innerHeight + 'px';
+    const n = Math.round(Math.min(70, Math.max(22, innerWidth * innerHeight / 22000)));
+    items = Array.from({ length: n }, () => make(true)).sort((p, q) => p.z - q.z);
+  }
+
+  function draw(it) {
+    const s = it.size, col = it.col;
+    ctx.save();
+    ctx.translate(it.x, it.y); ctx.rotate(it.rot);
+    ctx.globalAlpha = it.a;
+    ctx.shadowColor = `rgba(${col},0.9)`; ctx.shadowBlur = 6 + 14 * it.z;
+    ctx.fillStyle = ctx.strokeStyle = `rgb(${col})`;
+    if (it.type === 'coin') {
+      ctx.lineWidth = Math.max(1, s * 0.07);
+      ctx.beginPath(); ctx.arc(0, 0, s * 0.62, 0, 6.283); ctx.stroke();
+      ctx.font = `700 ${s * 0.78}px ${getComputedStyle(document.body).fontFamily}`;
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(it.ch, 0, s * 0.03);
+    } else if (it.type === 'candle') {
+      const bw = s * 0.32, bh = s * 0.75;
+      ctx.lineWidth = Math.max(1, s * 0.06);
+      ctx.beginPath(); ctx.moveTo(0, -s * 0.75); ctx.lineTo(0, s * 0.75); ctx.stroke();
+      ctx.fillRect(-bw / 2, -bh / 2 + (it.up ? -s * 0.08 : s * 0.08), bw, bh);
+    } else if (it.type === 'arrow') {
+      ctx.beginPath();
+      const d = it.up ? -1 : 1;
+      ctx.moveTo(0, d * s * 0.55); ctx.lineTo(s * 0.5, -d * s * 0.3); ctx.lineTo(-s * 0.5, -d * s * 0.3);
+      ctx.closePath(); ctx.fill();
+    } else if (it.type === 'pct') {
+      ctx.font = `700 ${s * 0.62}px ${getComputedStyle(document.body).fontFamily}`;
+      ctx.textAlign = 'center'; ctx.textBaseline = 'middle'; ctx.fillText(it.txt, 0, 0);
+    } else {
+      ctx.lineWidth = Math.max(1, s * 0.07); ctx.lineJoin = 'round'; ctx.beginPath();
+      it.pts.forEach((p, i) => { const x = (i - 3) * s * 0.28, y = -p * s; i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); });
+      ctx.stroke();
+    }
+    ctx.restore();
+  }
+
+  function frame(now) {
+    const dt = Math.min(0.05, (now - last) / 1000); last = now;
+    ctx.clearRect(0, 0, W, H);
+    for (let i = 0; i < items.length; i++) {
+      const it = items[i];
+      if (!still) {
+        it.phase += dt;
+        it.y += it.vy * dt; it.x += (it.vx + Math.sin(it.phase) * 4 * DPR) * dt; it.rot += it.vr * dt;
+        if (it.y < -60 * DPR || it.x < -60 * DPR || it.x > W + 60 * DPR) items[i] = make(false);
+      }
+      draw(items[i]);
+    }
+    if (!still && !document.hidden) requestAnimationFrame(frame);
+  }
+
+  addEventListener('resize', size);
+  document.addEventListener('visibilitychange', () => {
+    if (!document.hidden && !still) { last = performance.now(); requestAnimationFrame(frame); }
+  });
+  size(); frame(performance.now());
+})();
+</script>
+</body>
+</html>
