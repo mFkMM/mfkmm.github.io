@@ -4,14 +4,15 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
-<meta name="theme-color" content="#06080e">
+<meta name="theme-color" content="#0a1120">
 <title>mFk Market Maker</title>
 <link rel="icon" type="image/png" href="logo.png">
 <link rel="apple-touch-icon" href="logo.png">
 <style>
 :root {
-  --bg: #06080e;
-  --card: rgba(13, 18, 30, 0.72);
+  --bg: #0a1120;
+  --field: rgb(14, 21, 36);
+  --card: rgba(14, 21, 36, 0.92);
   --border: rgba(255, 255, 255, 0.10);
   --text: #f8fafc;
   --muted: #94a3b8;
@@ -24,7 +25,13 @@
 * { box-sizing: border-box; margin: 0; padding: 0; }
 html, body { height: 100%; }
 body {
-  background: var(--bg);
+  background:
+    radial-gradient(1100px 700px at 12% -5%, rgba(37, 99, 235, 0.22), transparent 60%),
+    radial-gradient(900px 600px at 92% 8%, rgba(244, 63, 94, 0.12), transparent 60%),
+    radial-gradient(1000px 700px at 85% 105%, rgba(16, 185, 129, 0.16), transparent 60%),
+    radial-gradient(800px 600px at 5% 100%, rgba(251, 191, 36, 0.07), transparent 60%),
+    linear-gradient(180deg, #0c1426 0%, #080d1a 100%);
+  background-color: var(--bg);
   color: var(--text);
   font-family: var(--font);
   display: flex; align-items: center; justify-content: center;
@@ -36,6 +43,7 @@ body {
 .glow {
   position: fixed; inset: 0; z-index: 0; pointer-events: none;
   background:
+    radial-gradient(440px 380px at 50% 52%, rgba(6, 10, 20, 0.62), transparent 72%),
     radial-gradient(520px 320px at 50% 30%, rgba(244, 63, 94, 0.13), transparent 70%),
     radial-gradient(520px 320px at 50% 62%, rgba(16, 185, 129, 0.11), transparent 70%);
 }
@@ -80,20 +88,33 @@ form { width: 100%; margin-top: 30px; display: flex; flex-direction: column; gap
   display: flex; align-items: center; gap: 10px;
   height: 58px; padding: 0 16px;
   background: var(--card); border: 1px solid var(--border); border-radius: 16px;
-  backdrop-filter: blur(14px); -webkit-backdrop-filter: blur(14px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04), 0 10px 30px rgba(0, 0, 0, 0.35);
   transition: border-color .2s, box-shadow .2s;
 }
 .field:focus-within {
   border-color: rgba(251, 191, 36, 0.55);
-  box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.10);
+  box-shadow: 0 0 0 4px rgba(251, 191, 36, 0.10), 0 10px 30px rgba(0, 0, 0, 0.35);
 }
 .field svg { flex-shrink: 0; color: var(--muted); }
 .field input {
   flex: 1; min-width: 0; height: 100%;
   background: transparent; border: 0; outline: 0;
   color: var(--text); font: 500 16px var(--font); letter-spacing: .02em;
+  caret-color: var(--gold);
 }
 .field input::placeholder { color: var(--dim); }
+/* Tarayıcının kayıtlı şifre (autofill) beyaz/mavi zeminini koyu temaya boya */
+.field input:-webkit-autofill,
+.field input:-webkit-autofill:hover,
+.field input:-webkit-autofill:focus,
+.field input:-webkit-autofill:active {
+  -webkit-text-fill-color: var(--text);
+  -webkit-box-shadow: 0 0 0 1000px var(--field) inset;
+  box-shadow: 0 0 0 1000px var(--field) inset;
+  caret-color: var(--gold);
+  transition: background-color 99999s ease-out 0s;
+}
+.field input:autofill { background: transparent; }
 .eye { background: none; border: 0; cursor: pointer; color: var(--muted); display: flex; padding: 6px; }
 .eye:hover { color: var(--text); }
 button.go {
@@ -115,9 +136,14 @@ button.go:disabled { opacity: .55; cursor: wait; }
 }
 footer {
   position: fixed; left: 0; right: 0; bottom: calc(14px + env(safe-area-inset-bottom)); z-index: 1;
-  text-align: center; font-size: 12px; letter-spacing: .18em; color: var(--dim);
+  text-align: center; font-size: 12px; letter-spacing: .18em; color: var(--muted);
 }
-footer b { color: var(--gold); font-weight: 600; }
+footer b {
+  font-weight: 800; letter-spacing: .12em;
+  background: linear-gradient(110deg, #ff3366 0%, var(--gold) 50%, #00f59b 100%);
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+}
+footer .dot { color: var(--gold); margin: 0 6px; }
 @media (max-width: 420px) {
   .logo-frame img { width: 140px; height: 140px; }
   h1 { font-size: 25px; margin-top: 22px; }
@@ -135,7 +161,7 @@ footer b { color: var(--gold); font-weight: 600; }
 <div class="glow" aria-hidden="true"></div>
 
 <main>
-  <div class="logo-frame"><img src="logo.png" alt="mFk Market Maker"></div>
+  <div class="logo-frame"><img src="logo.png" alt="mFk Market Maker" width="176" height="176" decoding="async" fetchpriority="high"></div>
   <h1><span class="t-mfk">mFk</span><span class="t-market">Market</span><span class="t-maker">Maker</span></h1>
 
   <form id="f" autocomplete="off">
@@ -159,7 +185,7 @@ footer b { color: var(--gold); font-weight: 600; }
   </form>
 </main>
 
-<footer><b>@MFK</b> • SECURE GATEWAY</footer>
+<footer><b>mFk Games</b><span class="dot">•</span>SECURE GATEWAY</footer>
 
 <script>
 /* Hedef adres burada şifreli durur: sayfa kaynağında görünmez. Doğru şifre PBKDF2 ile anahtar üretir,
@@ -207,17 +233,18 @@ $('f').addEventListener('submit', async e => {
   }
 });
 
-/* Arka plan: kurumsal işlem terminali. Katmanlar (hepsi düşük opaklık, içeriği bastırmaz):
-   1) ince ızgara  2) yavaşça kayan mum grafiği + altın hareketli ortalama
-   3) kenarlarda nefes alan derinlik çubukları (sol alış / sağ satış)  4) üstte akan fiyat şeridi.
+/* Arka plan: işlem terminali. Katmanlar:
+   1) ince ızgara  2) uzakta yavaş kayan ikinci mum grafiği (paralaks)
+   3) önde ana mum grafiği + altın hareketli ortalama + altı dolgu + hacim çubukları + son fiyat çizgisi/etiketi
+   4) sağda fiyat ekseni  5) kenarlarda nefes alan derinlik çubukları  6) üstte akan fiyat şeridi.
    Arka sekmede ve "hareketi azalt" tercihinde durur. */
 (() => {
   const c = $('bg'), ctx = c.getContext('2d');
+  const L = document.createElement('canvas'), lx = L.getContext('2d');   // katman tamponu (kenar solması için)
   const still = matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const G = '16,185,129', R = '244,63,94', Y = '251,191,36', S = '148,163,184';
+  const G = '16,185,129', R = '244,63,94', Y = '251,191,36', B = '96,165,250';
   const FONT = '"JetBrains Mono", "SF Mono", Menlo, Consolas, monospace';
-  let W, H, D, last = performance.now(), t = 0;
-  let candles = [], cw, offset = 0, price = 100;
+  let W, H, D, last = performance.now(), t = 0, dt = 0;
   let depth = [];
   const TICK = [
     ['BTC/USDT', 104250.1], ['ETH/USDT', 3912.44], ['SOL/USDT', 211.37], ['BNB/USDT', 702.15],
@@ -226,67 +253,166 @@ $('f').addEventListener('submit', async e => {
   ].map(([s, p]) => ({ s, p, ch: (Math.random() - 0.45) * 4 }));
   let tickX = 0;
 
-  function nextCandle() {
-    const o = price;
-    const drift = Math.sin(candles.length / 23) * 0.35 + (Math.random() - 0.5) * 1.6;
-    const cl = Math.max(20, o + drift);
-    const hi = Math.max(o, cl) + Math.random() * 0.9, lo = Math.min(o, cl) - Math.random() * 0.9;
-    price = cl;
-    return { o, c: cl, h: hi, l: lo };
+  const series = (px, speed, start, vol) => ({ k: [], px, cw: 0, off: 0, price: start, n: 0, speed, vol, mn: null, mx: null });
+  const front = series(12, 14, 104250, 60), back = series(6, 5, 3912, 4);
+
+  function nextCandle(s) {
+    const o = s.price;
+    const drift = (Math.sin(s.n / 23) * 0.35 + Math.sin(s.n / 71) * 0.25 + (Math.random() - 0.5) * 1.6) * s.vol;
+    s.n++;
+    const cl = o + drift;
+    const hi = Math.max(o, cl) + Math.random() * 0.9 * s.vol, lo = Math.min(o, cl) - Math.random() * 0.9 * s.vol;
+    s.price = cl;
+    return { o, c: cl, h: hi, l: lo, v: 0.25 + Math.random() * 0.5 + Math.min(1, Math.abs(cl - o) / s.vol) * 0.5 };
   }
 
   function size() {
-    D = Math.min(devicePixelRatio || 1, 2);
-    W = c.width = innerWidth * D; H = c.height = innerHeight * D;
+    D = Math.min(devicePixelRatio || 1, 1.25);   // arka plan için tam retina gereksiz; GPU yükünü ~%60 azaltır
+    if (!innerWidth || !innerHeight) { W = H = 0; return; }
+    W = c.width = L.width = innerWidth * D; H = c.height = L.height = innerHeight * D;
     c.style.width = innerWidth + 'px'; c.style.height = innerHeight + 'px';
-    cw = (innerWidth < 600 ? 9 : 12) * D;
-    const n = Math.ceil(W / cw) + 4;
-    while (candles.length < n) candles.push(nextCandle());
-    const rows = Math.round(innerHeight / (innerWidth < 600 ? 34 : 26));
+    const narrow = innerWidth < 600;
+    for (const s of [front, back]) {
+      s.cw = s.px * (narrow ? 0.75 : 1) * D;
+      const n = Math.ceil(W / s.cw) + 4;
+      while (s.k.length < n) s.k.push(nextCandle(s));
+      while (s.k.length > n) s.k.shift();
+    }
+    const rows = Math.round(innerHeight / (narrow ? 34 : 26));
     depth = Array.from({ length: rows }, (_, i) => ({ base: 0.35 + Math.random() * 0.65, ph: Math.random() * 6.28, i }));
+  }
+
+  function advance(s) {
+    s.off += s.speed * D * dt;
+    while (s.off >= s.cw) { s.off -= s.cw; s.k.shift(); s.k.push(nextCandle(s)); }
   }
 
   function grid() {
     const step = 64 * D;
-    ctx.strokeStyle = 'rgba(148,163,184,0.045)'; ctx.lineWidth = 1;
+    ctx.strokeStyle = 'rgba(148,163,184,0.06)'; ctx.lineWidth = 1;
     ctx.beginPath();
-    for (let x = (-(offset * 0.25) % step); x < W; x += step) { ctx.moveTo(x, 0); ctx.lineTo(x, H); }
+    for (let x = (-(front.off * 0.25) % step); x < W; x += step) { ctx.moveTo(x, 0); ctx.lineTo(x, H); }
     for (let y = 0; y < H; y += step) { ctx.moveTo(0, y); ctx.lineTo(W, y); }
     ctx.stroke();
   }
 
-  function chart() {
-    const top = H * 0.50, bottom = H * 0.92;
+  // Ölçek yumuşak takip eder: mum kaydıkça grafik zıplamaz.
+  function scale(s, top, bottom) {
     let mn = Infinity, mx = -Infinity;
-    for (const k of candles) { mn = Math.min(mn, k.l); mx = Math.max(mx, k.h); }
-    const span = (mx - mn) || 1, Y0 = v => bottom - (v - mn) / span * (bottom - top);
-    ctx.save();
-    ctx.globalAlpha = 0.16;
-    candles.forEach((k, i) => {
-      const x = i * cw - offset, up = k.c >= k.o, col = up ? G : R;
-      ctx.strokeStyle = ctx.fillStyle = `rgb(${col})`;
-      ctx.lineWidth = Math.max(1, D);
-      ctx.beginPath(); ctx.moveTo(x + cw / 2, Y0(k.h)); ctx.lineTo(x + cw / 2, Y0(k.l)); ctx.stroke();
+    for (const k of s.k) { mn = Math.min(mn, k.l); mx = Math.max(mx, k.h); }
+    const pad = (mx - mn) * 0.08;
+    mn -= pad; mx += pad;
+    if (s.mn === null) { s.mn = mn; s.mx = mx; }
+    const a = Math.min(1, dt * 2.5);
+    s.mn += (mn - s.mn) * a; s.mx += (mx - s.mx) * a;
+    const span = (s.mx - s.mn) || 1;
+    return v => bottom - (v - s.mn) / span * (bottom - top);
+  }
+
+  function candles(g, s, Y0, alpha) {
+    g.globalAlpha = alpha;
+    g.lineWidth = Math.max(1, D);
+    s.k.forEach((k, i) => {
+      const x = i * s.cw - s.off, col = k.c >= k.o ? G : R;
+      g.strokeStyle = g.fillStyle = `rgb(${col})`;
+      g.beginPath(); g.moveTo(x + s.cw / 2, Y0(k.h)); g.lineTo(x + s.cw / 2, Y0(k.l)); g.stroke();
       const y1 = Y0(Math.max(k.o, k.c)), y2 = Y0(Math.min(k.o, k.c));
-      ctx.fillRect(x + cw * 0.2, y1, cw * 0.6, Math.max(D, y2 - y1));
+      g.fillRect(x + s.cw * 0.18, y1, s.cw * 0.64, Math.max(D, y2 - y1));
     });
-    // moving average (gold) with glow
-    ctx.globalAlpha = 0.35; ctx.strokeStyle = `rgb(${Y})`; ctx.lineWidth = 1.6 * D;
-    ctx.shadowColor = `rgba(${Y},0.8)`; ctx.shadowBlur = 10 * D;
-    ctx.beginPath();
-    let acc = 0;
-    candles.forEach((k, i) => {
-      acc += k.c; if (i >= 9) acc -= candles[i - 9].c;
-      if (i < 8) return;
-      const x = i * cw - offset + cw / 2, y = Y0(acc / 9);
-      i === 8 ? ctx.moveTo(x, y) : ctx.lineTo(x, y);
+    g.globalAlpha = 1;
+  }
+
+  function maPoints(s, Y0, n) {
+    const pts = []; let acc = 0;
+    s.k.forEach((k, i) => {
+      acc += k.c; if (i >= n) acc -= s.k[i - n].c;
+      if (i >= n - 1) pts.push([i * s.cw - s.off + s.cw / 2, Y0(acc / n)]);
     });
-    ctx.stroke();
+    return pts;
+  }
+
+  function fadeEdges(top, bottom, fadeTop, fadeBottom) {
+    lx.globalCompositeOperation = 'destination-out';
+    if (fadeTop) {
+      const g = lx.createLinearGradient(0, top - 30 * D, 0, top + fadeTop);
+      g.addColorStop(0, 'rgba(0,0,0,1)'); g.addColorStop(1, 'rgba(0,0,0,0)');
+      lx.fillStyle = g; lx.fillRect(0, 0, W, top + fadeTop);
+    }
+    if (fadeBottom) {
+      const g = lx.createLinearGradient(0, bottom - fadeBottom, 0, bottom + 20 * D);
+      g.addColorStop(0, 'rgba(0,0,0,0)'); g.addColorStop(1, 'rgba(0,0,0,1)');
+      lx.fillStyle = g; lx.fillRect(0, bottom - fadeBottom, W, H);
+    }
+    lx.globalCompositeOperation = 'source-over';
+  }
+
+  function backChart() {
+    const top = H * 0.10, bottom = H * 0.52;
+    const Y0 = scale(back, top, bottom);
+    lx.clearRect(0, 0, W, H);
+    candles(lx, back, Y0, 0.55);
+    const pts = maPoints(back, Y0, 14);
+    lx.strokeStyle = `rgba(${B},0.9)`; lx.lineWidth = 1.2 * D;
+    lx.beginPath(); pts.forEach(([x, y], i) => i ? lx.lineTo(x, y) : lx.moveTo(x, y)); lx.stroke();
+    fadeEdges(top, bottom, (bottom - top) * 0.35, (bottom - top) * 0.45);
+    ctx.globalAlpha = 0.16; ctx.drawImage(L, 0, 0); ctx.globalAlpha = 1;
+  }
+
+  function frontChart() {
+    const top = H * 0.46, bottom = H * 0.86, volTop = H * 0.875, volBottom = H * 0.965;
+    const Y0 = scale(front, top, bottom);
+    lx.clearRect(0, 0, W, H);
+
+    // hacim çubukları
+    lx.globalAlpha = 0.5;
+    front.k.forEach((k, i) => {
+      const x = i * front.cw - front.off, h = (volBottom - volTop) * Math.min(1, k.v);
+      lx.fillStyle = `rgb(${k.c >= k.o ? G : R})`;
+      lx.fillRect(x + front.cw * 0.18, volBottom - h, front.cw * 0.64, h);
+    });
+    lx.globalAlpha = 1;
+
+    // hareketli ortalamanın altı: altın dolgu
+    const pts = maPoints(front, Y0, 9);
+    if (pts.length > 1) {
+      const fill = lx.createLinearGradient(0, top, 0, bottom);
+      fill.addColorStop(0, `rgba(${Y},0.30)`); fill.addColorStop(1, `rgba(${Y},0)`);
+      lx.fillStyle = fill;
+      lx.beginPath(); lx.moveTo(pts[0][0], bottom);
+      pts.forEach(([x, y]) => lx.lineTo(x, y));
+      lx.lineTo(pts[pts.length - 1][0], bottom); lx.closePath(); lx.fill();
+    }
+
+    candles(lx, front, Y0, 0.85);
+
+    // hareketli ortalama çizgisi (parlak)
+    // (shadowBlur her karede çok pahalı; geniş yarı saydam alt çizgi aynı parıltıyı ucuza verir)
+    lx.beginPath(); pts.forEach(([x, y], i) => i ? lx.lineTo(x, y) : lx.moveTo(x, y));
+    lx.strokeStyle = `rgba(${Y},0.22)`; lx.lineWidth = 7 * D; lx.stroke();
+    lx.strokeStyle = `rgb(${Y})`; lx.lineWidth = 1.8 * D; lx.stroke();
+
+    fadeEdges(top, bottom, (bottom - top) * 0.40, 0);
+    ctx.globalAlpha = 0.34; ctx.drawImage(L, 0, 0); ctx.globalAlpha = 1;
+
+    // son fiyat çizgisi + etiketi, sağda fiyat ekseni
+    const lastK = front.k[front.k.length - 3], up = lastK.c >= lastK.o, col = up ? G : R;
+    const yp = Y0(lastK.c);
+    ctx.save();
+    ctx.font = `600 ${10.5 * D}px ${FONT}`; ctx.textBaseline = 'middle'; ctx.textAlign = 'right';
+    const fmt = v => v.toLocaleString('en-US', { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+    ctx.fillStyle = 'rgba(148,163,184,0.30)';
+    for (let i = 0; i <= 4; i++) {
+      const v = front.mn + (front.mx - front.mn) * (0.15 + i * 0.175), y = Y0(v);
+      if (Math.abs(y - yp) > 14 * D) ctx.fillText(fmt(v), W - 10 * D, y);
+      ctx.fillRect(W - 6 * D, y, 4 * D, Math.max(1, D * 0.6));
+    }
+    ctx.setLineDash([4 * D, 5 * D]); ctx.strokeStyle = `rgba(${col},0.35)`; ctx.lineWidth = D;
+    ctx.beginPath(); ctx.moveTo(0, yp); ctx.lineTo(W, yp); ctx.stroke(); ctx.setLineDash([]);
+    const label = fmt(lastK.c), tw = ctx.measureText(label).width + 14 * D, th = 18 * D;
+    ctx.fillStyle = `rgba(${col},0.55)`;
+    ctx.beginPath(); ctx.roundRect ? ctx.roundRect(W - tw - 4 * D, yp - th / 2, tw, th, 4 * D) : ctx.rect(W - tw - 4 * D, yp - th / 2, tw, th); ctx.fill();
+    ctx.fillStyle = 'rgba(255,255,255,0.92)'; ctx.fillText(label, W - 11 * D, yp + 0.5 * D);
     ctx.restore();
-    // fade the chart into the background towards the top
-    const g = ctx.createLinearGradient(0, top - 40 * D, 0, top + (bottom - top) * 0.45);
-    g.addColorStop(0, 'rgba(6,8,14,1)'); g.addColorStop(1, 'rgba(6,8,14,0)');
-    ctx.fillStyle = g; ctx.fillRect(0, top - 40 * D, W, (bottom - top) * 0.45 + 40 * D);
   }
 
   function walls() {
@@ -296,10 +422,10 @@ $('f').addEventListener('submit', async e => {
       const w = maxw * v * (0.4 + 0.6 * Math.abs(Math.sin(r.i * 0.37)));
       const y = r.i * rh + rh * 0.18, h = rh * 0.64;
       let gr = ctx.createLinearGradient(0, 0, w, 0);
-      gr.addColorStop(0, `rgba(${G},0.13)`); gr.addColorStop(1, `rgba(${G},0)`);
+      gr.addColorStop(0, `rgba(${G},0.15)`); gr.addColorStop(1, `rgba(${G},0)`);
       ctx.fillStyle = gr; ctx.fillRect(0, y, w, h);
       gr = ctx.createLinearGradient(W, 0, W - w, 0);
-      gr.addColorStop(0, `rgba(${R},0.13)`); gr.addColorStop(1, `rgba(${R},0)`);
+      gr.addColorStop(0, `rgba(${R},0.15)`); gr.addColorStop(1, `rgba(${R},0)`);
       ctx.fillStyle = gr; ctx.fillRect(W - w, y, w, h);
     }
   }
@@ -308,7 +434,8 @@ $('f').addEventListener('submit', async e => {
     const y = 22 * D;
     ctx.save();
     ctx.font = `500 ${11 * D}px ${FONT}`; ctx.textBaseline = 'middle';
-    ctx.fillStyle = 'rgba(148,163,184,0.05)'; ctx.fillRect(0, y - 12 * D, W, 24 * D);
+    ctx.fillStyle = 'rgba(15,23,42,0.55)'; ctx.fillRect(0, y - 12 * D, W, 24 * D);
+    ctx.fillStyle = 'rgba(148,163,184,0.10)'; ctx.fillRect(0, y + 12 * D, W, Math.max(1, D * 0.6));
     let x = tickX;
     const gap = 34 * D;
     let total = 0;
@@ -322,8 +449,8 @@ $('f').addEventListener('submit', async e => {
     });
     for (let rep = 0; x < W; rep++) {
       for (const p of parts) {
-        ctx.fillStyle = 'rgba(203,213,225,0.38)'; ctx.fillText(p.a, x, y);
-        ctx.fillStyle = `rgba(${p.up ? G : R},0.55)`; ctx.fillText(p.b, x + p.wa, y);
+        ctx.fillStyle = 'rgba(203,213,225,0.50)'; ctx.fillText(p.a, x, y);
+        ctx.fillStyle = `rgba(${p.up ? G : R},0.75)`; ctx.fillText(p.b, x + p.wa, y);
         x += p.wa + p.wb + gap;
       }
       if (rep > 4) break;
@@ -333,34 +460,44 @@ $('f').addEventListener('submit', async e => {
   }
 
   function vignette() {
-    const g = ctx.createRadialGradient(W / 2, H * 0.42, Math.min(W, H) * 0.2, W / 2, H * 0.5, Math.max(W, H) * 0.75);
-    g.addColorStop(0, 'rgba(6,8,14,0)'); g.addColorStop(1, 'rgba(6,8,14,0.85)');
+    const g = ctx.createRadialGradient(W / 2, H * 0.45, Math.min(W, H) * 0.25, W / 2, H * 0.5, Math.max(W, H) * 0.8);
+    g.addColorStop(0, 'rgba(6,10,20,0)'); g.addColorStop(1, 'rgba(6,10,20,0.55)');
     ctx.fillStyle = g; ctx.fillRect(0, 0, W, H);
   }
 
+  let lastDraw = 0;
+  function loop(now) {   // 30 fps yeter: grafik yavaş kayıyor, işlemci yarı yarıya rahatlar
+    if (!still && !document.hidden) requestAnimationFrame(loop); else running = false;
+    if (now - lastDraw < 32) return;
+    lastDraw = now; frame(now);
+  }
+
   function frame(now) {
-    const dt = Math.min(0.05, (now - last) / 1000); last = now; t += dt;
+    dt = Math.min(0.08, (now - last) / 1000); last = now; t += dt;
+    if (!W || !H) return;   // pencere henüz ölçülmedi (gizli sekme vb.)
     ctx.clearRect(0, 0, W, H);
     if (!still) {
-      offset += 14 * D * dt;
-      while (offset >= cw) { offset -= cw; candles.shift(); candles.push(nextCandle()); }
+      advance(front); advance(back);
       for (const k of TICK) if (Math.random() < dt * 0.6) {
         const d = (Math.random() - 0.5) * 0.002; k.p *= 1 + d; k.ch += d * 100;
       }
     }
-    grid(); walls(); chart();
+    grid(); backChart(); walls(); frontChart();
     const total = ticker();
     if (!still) { tickX -= 28 * D * dt; if (-tickX > total) tickX += total; }
     vignette();
-    running = !still && !document.hidden;
-    if (running) requestAnimationFrame(frame);
   }
 
   let running = false;
-  const kick = () => { if (!running) { last = performance.now(); frame(last); } };
+  const kick = () => {
+    last = performance.now(); frame(last);
+    if (!running && !still && !document.hidden) { running = true; requestAnimationFrame(loop); }
+  };
   addEventListener('resize', () => { size(); kick(); });
   document.addEventListener('visibilitychange', () => { if (!document.hidden) kick(); });
-  size(); kick();
+  // Animasyon sayfa (logo dahil) yüklendikten sonra başlar: yükleme sırasında işlemciyi paylaşmaz.
+  size();
+  if (document.readyState === 'complete') kick(); else addEventListener('load', kick, { once: true });
 })();
 </script>
 </body>
